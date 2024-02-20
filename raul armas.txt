@@ -1,0 +1,170 @@
+create or replace function scott.sp_venta(precio float ,cantidad number ,dia varchar2) return float
+is 
+dscto float;
+venta float;
+begin
+if dia ='LUNES' then 
+ dscto:=0.05;
+elsif dia ='MIERCOLES' then
+ dscto:=0.08;
+else 
+ dscto:=0.00;
+end if;
+
+venta:= cantidad*(precio-precio*dscto);
+DBMS_OUTPUT.PUT_LINE('El precio de venta es : ' || venta);
+end;
+/
+
+
+
+
+
+
+
+-- FUNCION
+
+create or replace function SCOTT.fnSuma
+( a number, b number ) return number 
+is 
+  c number; 
+begin 
+  c := a + b; 
+  return c; 
+end; 
+
+
+-------------------------------------------------------------------------------------------------------------
+
+create or replace function scott.fn_mayor_v1( p_n1 number , p_n2 number, p_n3 number) return number
+is 
+mayor number;
+begin
+if(p_n1>p_n2) then 
+ mayor:=p_n1;
+else 
+  mayor:=p_n2;
+end if;
+if( p_n3>mayor) then
+mayor:=p_n3;
+end if;
+return mayor;
+end;
+/
+
+select scott.fn_mayor_v1(10,20,30) from dual;
+---------------------------------------------------------------------------------------------------------------
+create or replace function scott.fn_doble
+(P_num in number) return number 
+is 
+begin 
+P_num := P_num *2 ;
+return p_num;
+
+end;
+/
+
+
+P_num  ( es destino de asignación) no se puede utilizar porque es un parámetro de entrada 
+
+
+
+
+MANERA CORRECTA :
+
+
+create or replace function scott.fn_doble
+(P_num in number) return number 
+is 
+v_doble number;
+begin 
+v_doble := P_num *2 ;
+return v_doble;
+
+end;
+/
+
+
+----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+--Funcion qeu retorna el nombre del dia de la semana 
+
+create or replace function scott.fn_dia_semana (P_dia in number) return varchar2 
+is 
+v_nombre varchar2(50);
+begin 
+case p_dia
+ when 1 then v_nombre := 'Lunes';
+ when 2 then v_nombre := 'Martes ';
+ when 3 then v_nombre := 'Miércoles';
+ when 4 then v_nombre := 'Jueves';
+ when 5 then v_nombre := 'Viernes';
+ when 6 then v_nombre := 'Sábado';
+ when 7 then v_nombre := 'Domingo';
+ else v_nombre := 'no existe';
+end case;
+return v_nombre;
+end;
+/
+
+
+select scott.fn_dia_semana(2) from dual 
+
+
+---------------------------------------------------------
+
+
+CREATE OR REPLACE function scott.Es_Bisiesto (Ano in number) return boolean is
+  Result boolean;
+ vBandera boolean;
+begin
+If Ano Mod 4 = 0 Then
+  If (Ano Mod 100 = 0) And Not (Ano Mod 400 = 0) Then
+     vBandera := False;
+  Else
+      vBandera := True;
+  End If;
+Else
+    vBandera := False;
+End If;
+  return(vBandera);
+end Es_Bisiesto;
+/
+
+create or replace function scott.fn_dias_mes(P_mes in varchar2 ,P_ano in number) return number
+is 
+dias number;
+begin         
+case P_mes
+ when 'ENERO' then dias:=31;           
+ when 'FEBRERO' then 
+  if scott.Es_Bisiesto(P_ano)=true then dias:=29;
+  else 
+  dias:=28;
+  end if;
+ when 'MARZO' then dias:=31;
+ when 'ABRIL' then dias:=30;
+ when 'MAYO' then dias:=31;
+ when 'JUNIO' then dias:=30;
+ when 'JULIO' then dias:=31;
+ when 'AGOSTO' then dias:=31;
+ when 'SETIEMBRE' then dias:=30;
+ when 'OCTUBRE' then dias:=31;
+ when 'NOVIEMBRE' then dias:=30;
+ when 'DICIEMBRE' then dias:=31;
+ else  dias := 0;
+end case;
+return dias;
+end;
+/
+
+
+select scott.fn_dias_mes('FEBRERO',2020) from dual 

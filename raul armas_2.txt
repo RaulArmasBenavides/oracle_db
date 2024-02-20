@@ -1,0 +1,28 @@
+PRUEBA 
+
+
+--OTORGAR PERMISO A SYSTEM
+grant dba to system; 
+
+
+--SE CREA UNA CONEXIÓN MEJOR PARA CADA UNO DE LOS ESQUEMAS MODELOS 
+select * from SCOTT.emp;
+
+
+-- PARA VER TODOS LOS USUARIOS Y CREAR UN USUARIO
+select * from dba_users;
+
+
+create user siga identified by admin;
+
+create table siga.demo(
+    dato varchar2(100)
+);
+
+select * from dba_data_files;
+
+select * from dba_users
+where username = 'SIGA';
+
+
+
