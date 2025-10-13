@@ -1,0 +1,2 @@
+usuario: E00002
+clave: java

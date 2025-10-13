@@ -1,0 +1,14 @@
+Buenas noches estimado profesor,
+
+Le envío la tarea 1 que le mostré el sábado en clase:
+
+1.- Login de la aplicación y control de sesión en los JSP
+2.- Se usó en todas las funcionalidades del CRUD store procedures en Oracle
+3.- Se integró con Bootstrap para mejorar las interfaces.
+
+No Incluye:
+1.- Validaciones de ingreso de datos
+2.- Pantallas de confirmación
+
+NOTA IMPORTANTE:
+El usuario y password son los datos de la columna IDEMPLEADO y CLAVE de la tabla EMPLEADO

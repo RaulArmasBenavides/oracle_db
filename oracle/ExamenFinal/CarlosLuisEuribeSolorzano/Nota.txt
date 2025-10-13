@@ -1,0 +1,18 @@
+Integrantes
+1.Carlos Luis Euribe Solorzano
+
+Arquitectura
+1.View: jsp, bootstraps, JQuerym AJAX
+2.Controller: Servlets
+3.Dao: class
+4.BD:Oracle - StoreProcedures
+
+Usuario:Dentro de cada Modulito de las pantallas de Aplicación
+
+Video:Las capturas de pantallas importantes donde se hace referencia a la arquitectura y funcionalidades estan en las carpetas PantallaAplicacion y PantallasCodigo
+
+También se incluyen las tareas:
+
+Tarea 1: Completar el CRUD de Producto
+Tarea 2: Desarrollo de Prueba Calificada
+Tarea 3: Integrar el proyecto con Bootstrap

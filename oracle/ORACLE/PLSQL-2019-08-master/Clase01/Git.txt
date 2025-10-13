@@ -1,0 +1,6 @@
+GIT
+
+git clone https://github.com/gcoronelc/PLSQL-2019-08.git
+
+git pull
+

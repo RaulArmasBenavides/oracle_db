@@ -1,0 +1,404 @@
+﻿-- Empresa        :  UTP
+-- Producto       :  ERP                  
+-- Software       :  ERP LOGÍSTICA
+-- DBMS           :  Oracle
+-- Base de Datos  :  db_utp
+--Versión : 1.2
+-- Script         :  Crea los objetos de la base de datos y carga datos de prueba
+-- Alumno    :  Raú Marcelo Armas Benavides
+-- Docente : Gustavo Coronel Castillo 
+-- Creado por     :  RMAB
+-- Actualizaciones:  
+--   11/09/2019 - RMAB Se creó la base de datos 
+--   15/09/2019 - RMAB Se agregaron tablas material,tipo,marca,ctascontables,
+--                     unidadexplot
+
+---------------------------------------------------------------------------------
+-- Creación de esquema utp
+---------------------------------------------------------------------------------
+-- Verificar Cuenta
+
+
+connect system/oracle
+-- Conexión con la base de datos
+
+declare
+  n int(3);
+begin
+  select count(*) into n from dba_users where username = 'utp';
+  if(n = 1) then
+    execute immediate 'drop user utp cascade';
+  end if;
+  execute immediate 'create user utp identified by utp';  
+end;
+/
+
+-- Asigna privilegios
+
+grant connect, resource to utp;
+grant all PRIVILEGES to utp;
+
+
+connect utp/utp
+
+---------------------------------------------------------------------------------
+-- Verificando la existencia de las tablas
+---------------------------------------------------------------------------------
+/*
+--IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'detalleservicio' )
+   DROP TABLE detalleservicio
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'detallefactura' )
+   DROP TABLE detallefactura
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'detalord' )
+   DROP TABLE detalord
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'solicitud' )
+   DROP TABLE solicitud
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'servicio' )
+   DROP TABLE servicio
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'factura' )
+   DROP TABLE factura
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'orden_compra' )
+   DROP TABLE orden_compra
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'usuarios' )
+   DROP TABLE usuarios
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'empleado' )
+   DROP TABLE empleado
+ IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'cliente' )
+   DROP TABLE cliente
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'proveedor' )
+   DROP TABLE proveedor
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'contrato' )
+   DROP TABLE contrato
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'area' )
+   DROP TABLE area
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'sede' )
+   DROP TABLE sede
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'recepcion' )
+   DROP TABLE recepcion
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'ctascontables' )
+   DROP TABLE ctascontables
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'unidadexplot' )
+   DROP TABLE unidadexplot
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'marca' )
+   DROP TABLE marca
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'tipo' )
+   DROP TABLE tipo
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'material' )
+   DROP TABLE material
+IF EXISTS ( SELECT name FROM sysobjects
+   WHERE type = 'U' AND name = 'material' )
+   DROP TABLE proveedor
+*/
+---------------------------------------------------------------------------------
+--CREACION DE TABLAS
+---------------------------------------------------------------------------------
+
+--(1)-TABLA CLIENTES
+--giro puede ser persona natural o jurídica 
+
+create table cliente (
+idcliente int NOT NULL,
+ap_paterno nvarchar2(30)  NOT NULL,
+ap_materno nvarchar2(30)  NOT NULL,
+telefono nchar(20) DEFAULT '--',
+direccion nvarchar2(50) NULL,
+giro nvarchar2(30) NOT NULL,
+sexo nchar(2) NOT NULL, 
+DNI nchar(8) NOT NULL,
+RUC nchar(10) NOT NULL,
+cta nchar(20),
+CONSTRAINT PK_cliente PRIMARY KEY(idcliente)
+);
+
+
+--(2)-TABLA PROVEEDORES 
+--giro puede ser persona natural o jurídica 
+create table proveedor 
+( 
+idproveedor int NOT NULL,
+ap_paterno nvarchar2(30)  NOT NULL,
+ap_materno nvarchar2(30)  NOT NULL,
+telefono nchar(10) NOT NULL, 
+direccion nvarchar2(100) NULL,
+giro nvarchar2(30) NOT NULL,
+sexo nchar(2) NOT NULL, 
+DNI nchar(8) NOT NULL,
+RUC nchar(10) NOT NULL,
+cta nchar(20),
+CONSTRAINT  PK_proveedor PRIMARY KEY(idproveedor)
+);
+
+
+--(3)-TABLA SEDE
+create table sede  
+
+( idsede int,
+  nombre varchar2(10),
+  direccion varchar2(50),
+  CONSTRAINT  PK_sede PRIMARY KEY(idsede)
+);
+
+
+--(4)-TABLA AREA
+create table area 
+( idarea int,
+  descripcion nvarchar2(20),
+  CONSTRAINT  PK_area PRIMARY KEY(idarea)
+); 
+
+
+--(5)-TABLA CONTRATOS 
+create table contrato 
+(
+  idcontrato int NOT NULL,
+  fechaInicio date NOT NULL,
+  fechaFinal date NOT NULL,
+  sueldo real NOT NULL,
+  idarea int,
+  CONSTRAINT  PK_contrato PRIMARY KEY(idcontrato),
+  CONSTRAINT PK_areacontrato FOREIGN KEY(idarea) REFERENCES area(idarea)
+);
+
+
+
+--(6)-TABLA EMPLEADOS 
+create table empleado
+(  idempleado int  NOT NULL, 
+   ap_paterno varchar(30)  NOT NULL,
+   ap_materno varchar(30)  NOT NULL,
+   Nombre varchar(30)  NOT NULL,
+   sexo nchar(2) NOT NULL,
+   telefono nchar(10)  NOT NULL,
+   estado_civil nchar(2),
+   domicilio varchar(30),
+   DNI nchar(8) NOT NULL,
+   idcontrato int, 
+   CONSTRAINT  PK_empleado PRIMARY KEY (idempleado),
+  -- idcontrato int FOREIGN KEY REFERENCES contrato(idcontrato) ON DELETE CASCADE
+   CONSTRAINT FK_contrato FOREIGN KEY (idcontrato) REFERENCES contrato(idcontrato)
+);
+
+--(7)-TABLA USUARIOS 
+create table usuarios 
+( idusuarios int,
+  usuario  nchar(15),
+  clave    nchar(15),
+  email_corporativo  nvarchar2(30),
+  fecha_cambio_pass date,
+  permiso nchar(10),
+  CONSTRAINT  PK_usuario PRIMARY KEY(idusuarios),
+  idempleado int, --FOREIGN KEY REFERENCES empleado(idempleado) ON DELETE CASCADE
+  CONSTRAINT FK_empleado FOREIGN KEY (idempleado) REFERENCES empleado(idempleado)
+);
+
+--(8)-TABLA RECEPCIONES 
+--recepcion de la orden de compra 
+create table recepcion
+(
+  idrecepcion int,
+  fecharecep date NOT NULL,
+  estado nchar(3) NOT NULL, -- puede ser S(ACEPTADO), R (REGISTRADO), N(ANULADO) 
+  CONSTRAINT  PK_recepcion PRIMARY KEY(idrecepcion) 
+);
+
+
+--(9)-TABLA CUENTAS CONTABLES
+create table ctascontables
+(
+  idcta int,
+  descripcion varchar(100),
+  CONSTRAINT  PK_ctascontables PRIMARY KEY(idcta)
+);
+
+
+--(10)- TABLA UNIDAD DE EXPLOTACION
+create table unidadexplot
+( idexplotacion int,
+  descripcion varchar2(200),
+  CONSTRAINT  PK_unidadexplot PRIMARY KEY(idexplotacion)
+)
+
+
+--(11)-TABLA FACTURA 
+create table factura 
+( idfactura int  NOT NULL, 
+  Fecha date  NOT NULL,
+  CONSTRAINT  PK_factura PRIMARY KEY(idfactura),
+  idempleado int,
+  idcliente int,
+  --idempleado int FOREIGN KEY REFERENCES empleado(idempleado) ON DELETE CASCADE,
+  --idcliente int FOREIGN KEY REFERENCES cliente(idcliente) ON DELETE CASCADE
+   CONSTRAINT FK_empleadofactura FOREIGN KEY (idempleado) REFERENCES empleado(idempleado),
+   CONSTRAINT FK_clientefactura FOREIGN KEY (idcliente) REFERENCES cliente(idcliente)
+);
+
+--(11)-TABLA FACTURA 
+create table factura 
+( idfactura int  NOT NULL, 
+  Fecha date  NOT NULL,
+  idempleado int,
+  idcliente int,
+  CONSTRAINT  PK_factura PRIMARY KEY(idfactura),
+  --idempleado int FOREIGN KEY REFERENCES empleado(idempleado) ON DELETE CASCADE,
+  --idcliente int FOREIGN KEY REFERENCES cliente(idcliente) ON DELETE CASCADE
+   CONSTRAINT FK_empleadofactura FOREIGN KEY (idempleado) REFERENCES empleado(idempleado),
+   CONSTRAINT FK_clientefactura FOREIGN KEY (idcliente) REFERENCES cliente(idcliente)
+);
+
+
+--(12)-DETALLE DE LA FACTURA  
+create table detallefactura 
+( 
+  NumPedido int NOT NULL,
+  Cantidad int NOT NULL , 
+  Formadepago nchar(10)  NOT NULL,
+  Punit real,
+  Importe real ,
+  Subtotal real, 
+  IGV real ,
+  Total real  NOT NULL,
+  nserie varchar(20)  NOT NULL,
+  idfactura int NOT NULL,
+  --idfactura int FOREIGN KEY REFERENCES factura(idfactura) ON DELETE CASCADE
+  CONSTRAINT FK_factura FOREIGN KEY (idfactura) REFERENCES factura(idfactura) 
+);
+
+--(13)-TABLA DE ORDENES DE SERVICIO
+create table servicio 
+( idServicio int  NOT NULL,
+  FechaRecibido date  NOT NULL,
+  FechaEntrega date  NOT NULL,
+  CONSTRAINT PK_servicio PRIMARY KEY(idservicio),
+  idsede int,
+  idfactura int,
+  idexplotacion int,
+  idcta int,
+  CONSTRAINT FK_sedeservicio FOREIGN KEY (idsede) REFERENCES sede(idsede),
+  CONSTRAINT FK_facturaservicio FOREIGN KEY (idfactura) REFERENCES factura(idfactura),
+  CONSTRAINT FK_unidadexplotservicio FOREIGN KEY (idexplotacion) REFERENCES unidadexplot(idexplotacion),
+  CONSTRAINT FK_idcta FOREIGN KEY (idcta)  REFERENCES ctascontables(idcta)
+);
+
+--(14)-DETALLE DEL SERVICIO 
+create table detalleservicio
+( 
+  observaciones varchar(100) NULL,
+  estado varchar(10)  NOT NULL,
+  idservicio int,
+  idfactura int,
+  --idservicio int FOREIGN KEY REFERENCES servicio(idservicio) ON DELETE   
+  CONSTRAINT FK_serviciodet FOREIGN KEY (idservicio) REFERENCES servicio(idservicio),
+  CONSTRAINT FK_facturadet FOREIGN KEY (idfactura) REFERENCES factura(idfactura)
+);
+
+--(15)-TABLA SOLICITUDES 
+create table solicitud 
+( 
+  idsolicitud int,
+  fecha  date, 
+  fecha_rec date, 
+  fecha_apr  date, 
+  fecha_anu  date, -- si es que existe fecha de anulacion
+  estado nchar(3), -- puede ser S(ACEPTADO), R (REGISTRADO), N(ANULADO)
+  CONSTRAINT  PK_solicitud PRIMARY KEY(idsolicitud),
+  idempleado int,
+  idsede int,
+  --idsede int FOREIGN KEY REFERENCES sede(idsede) ON DELETE CASCADE,
+  --idempleado int FOREIGN KEY REFERENCES empleado(idempleado) ON DELETE CASCADE,
+  CONSTRAINT FK_empleadosoli FOREIGN KEY (idempleado) REFERENCES empleado(idempleado),
+  CONSTRAINT FK_sedesoli FOREIGN KEY (idsede) REFERENCES sede(idsede)
+);
+
+
+--(16)-TABLA ORDENES DE COMPRA  
+create table orden_compra 
+( idorden_compra int,
+  fecha  date, 
+  folio  nchar(10), 
+  fecha_rec date, 
+  fecha_apr  date, 
+  fecha_anu  date, -- si es que existe fecha de anulacion
+  fecha_entrega date, 
+  estado nchar(3) NOT NULL, -- puede ser S(ACEPTADO), R (REGISTRADO), N(ANULADO)
+  comentario varchar(250),
+  cr_responsable nchar(10), -- puede ser idEmpleado
+  moneda nvarchar2(9),
+  forma_pago nchar(15),
+  CONSTRAINT  PK_orden_compra PRIMARY KEY(idorden_compra),
+  idproveedor int,
+  idrecepcion int,
+  idfactura int,
+  idcta int,
+  idexplotacion int,
+  CONSTRAINT FK_proveedoroc FOREIGN KEY (idproveedor) REFERENCES proveedor(idproveedor),
+  CONSTRAINT FK_recepcionoc FOREIGN KEY (idrecepcion) REFERENCES recepcion(idrecepcion),
+  CONSTRAINT FK_facturaoc FOREIGN KEY (idfactura) REFERENCES factura(idfactura),
+  CONSTRAINT FK_idctaoc FOREIGN KEY (idcta)  REFERENCES ctascontables(idcta),
+  CONSTRAINT FK_unidadexplotoc FOREIGN KEY (idexplotacion) REFERENCES unidadexplot(idexplotacion)
+  --idproveedor int FOREIGN KEY REFERENCES proveedor(idproveedor) ON DELETE CASCADE,
+  --idrecepcion int FOREIGN KEY REFERENCES recepcion(idrecepcion) ON DELETE CASCADE
+);
+
+--(17) TABLA MARCA 
+create table marca 
+( idmarca int,
+  descripcion varchar(30),
+  CONSTRAINT  PK_marca PRIMARY KEY(idmarca)
+);
+--(18) TABLA TIPO
+--tipo de material
+create table tipo
+( idtipo int, 
+  descripcion varchar(30),
+  idmarca int, 
+  CONSTRAINT  PK_tipo PRIMARY KEY(idtipo),
+  CONSTRAINT FK_marca FOREIGN KEY (idmarca) REFERENCES marca(idmarca)
+   --idmarca int FOREIGN KEY REFERENCES marca(idmarca) ON DELETE CASCADE
+);
+----(19)- TABLA MATERIAL
+create table material 
+( idmaterial int,
+  descripcion varchar(30),
+  idtipo int,
+  CONSTRAINT  PK_material PRIMARY KEY(idmaterial),
+  CONSTRAINT FK_tipo FOREIGN KEY (idtipo) REFERENCES tipo(idtipo)
+  --idtipo int FOREIGN KEY REFERENCES tipo(idtipo) ON DELETE CASCADE
+);
+--(20)-DETALLE DE ORDENES DE COMPRA 
+create table detalord
+(  
+   cantidad int, 
+   unidad nchar(10),
+   precio real,
+   estado  nchar(4),
+   origen  nchar(4),
+   idorden_compra int,
+   idmaterial int,
+   CONSTRAINT FK_orden_compra FOREIGN KEY (idorden_compra) REFERENCES orden_compra(idorden_compra),
+   CONSTRAINT FK_material FOREIGN KEY (idmaterial) REFERENCES material(idmaterial)
+   --idorden_compra int FOREIGN KEY REFERENCES orden_compra(idorden_compra) ON DELETE CASCADE,
+   --idexplotacion int FOREIGN KEY REFERENCES unidadexplot(idexplotacion) ON DELETE CASCADE,
+   --idmaterial int FOREIGN KEY REFERENCES material(idmaterial) ON DELETE CASCADE,
+   --idcta int FOREIGN KEY REFERENCES ctascontables(idcta) ON DELETE CASCADE,
+   --idfactura int FOREIGN KEY REFERENCES factura(idfactura) ON DELETE CASCADE
+);

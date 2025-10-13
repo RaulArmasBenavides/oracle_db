@@ -1,0 +1,97 @@
+-- SECUENCIA
+-- Genera valores únicos y correlativos
+create sequence utp.sq_curso;  --para sp_new_proveedor
+create sequence utp.sq_curso2; --para sp_new_empleado
+create sequence utp.sq_curso3; 
+
+--procedimiento para agregar a un nuevo proveedor 
+create or replace procedure utp.sp_new_proveedor
+(ap_materno in varchar2,ap_paterno in nvarchar2, tlf in nchar,giro in nvarchar2 , sexo in nchar, DNi in nchar,RUC in nchar,p_id out nocopy number )
+is
+begin
+  insert into utp.proveedor(ap_paterno,ap_materno,telefono,giro,sexo,DNI,RUC,idproveedor)
+  values(ap_paterno,ap_materno,tlf,giro,sexo,DNI,RUC,utp.sq_curso.nextval)
+  RETURNING idproveedor into p_id;
+  commit;
+end;
+/
+
+set serveroutput on;
+declare
+  v_id number(10);
+begin
+  utp.sp_new_proveedor('Benavids','Altez','9852154','natural','M','7326200','12345', v_id);
+  utp.sp_new_proveedor('Benavente','Garcia','9852154','natural','M','7326200','12345', v_id);
+  utp.sp_new_proveedor('Alonso','Coto','9852154','natural','M','7326200','12345', v_id);
+  dbms_output.put_line( 'Se registraron: ' || v_id || ' nuevos proveedores ');
+end;
+/
+--efectivamente se registran los nuevos proveedores 
+select * from utp.proveedor;
+
+--procedimiento para agregar a un nuevo empleado
+
+create or replace procedure utp.sp_new_empleado
+(p_id out nocopy number ,nombre  in empleado.nombre%type,ap_paterno in nvarchar2,ap_materno in nvarchar2,sexo in nchar, tlf in nchar,estado_civil in empleado.estado_civil%type, domicilio in empleado.domicilio%type, DNi in empleado.DNI%type ,idcontrato in int)
+is
+begin
+  insert into utp.empleado(idempleado,nombre,ap_paterno,ap_materno,telefono,estado_civil,sexo,DNI,DOMICILIO,idcontrato)
+  values(utp.sq_curso2.nextval,nombre, ap_paterno,ap_materno,tlf,estado_civil,sexo,DNI,domicilio,idcontrato)
+  RETURNING idempleado into p_id;
+  commit;
+end;
+/
+
+set serveroutput on;
+declare
+  v_id number(10);
+begin
+  utp.sp_new_empleado( v_id,'Raul','Armas','Benavides','M','9852154','s','las Begonias 110','73262442',1);
+  dbms_output.put_line( 'Se registraron: ' || v_id || ' nuevos empleado(s) ');
+end;
+/
+--efectivamente se registran los nuevos empleados 
+select * from utp.empleado;
+
+
+--crear una vista donde muestre los usuarios y correos 
+create view vusuario_correo
+as select usuario, email_corporativo from utp.usuarios;
+
+
+--procedimiento para generar una Orden de Compra
+create or replace procedure utp.sp_generaroc(p_id out nocopy number, fecha in orden_compra.fecha%type ,folio in orden_compra.folio%type , fecha_rec in orden_compra.fecha_rec%type default null , fecha_apr in orden_compra.fecha_apr%type default null,fecha_anu in orden_compra.fecha_anu%type default null,fecha_entrega in orden_compra.fecha_entrega%type default null, estado in orden_compra.estado%type, comentario in orden_compra.comentario%type ,cr in orden_compra.cr_responsable%type, moneda in orden_compra.moneda%type ,forma_pago in orden_compra.forma_pago%type,idproveedor in int ,idrecepcion in int,idfactura in int ,idcta in int,idexplotacion in int)
+is begin 
+insert into orden_compra values(utp.sq_curso.nextval,fecha,folio,fecha_rec,fecha_apr,fecha_anu,fecha_entrega,estado,comentario,cr,moneda,forma_pago,idproveedor,idrecepcion,idfactura,idcta,idexplotacion)
+RETURNING idorden_compra into p_id;
+  commit;
+end;
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+create or replace package TECLADO_tapi
+is
+
+type TECLADO_tapi_rec is record (
+CONETECL  TECLADO.CONETECL%type
+,CODIPATRTECL  TECLADO.CODIPATRTECL%type
+,ESTTECL  TECLADO.ESTTECL%type
+,CODIEQUI  TECLADO.CODIEQUI%type
+,CODITECL  TECLADO.CODITECL%type
+);
+type TECLADO_tapi_tab is table of TECLADO_tapi_rec;
+
+-- insert
+procedure ins (
+p_CONETECL in TECLADO.CONETECL%type
+,p_CODIPATRTECL in TECLADO.CODIPATRTECL%type
+,p_ESTTECL in TECLADO.ESTTECL%type
+,p_CODIEQUI in TECLADO.CODIEQUI%type
+,p_CODITECL in TECLADO.CODITECL%type
+);
+-- update
+procedure upd (
+p_CONETECL in TECLADO.CONETECL%type
+,p_CODIPATRTECL in TECLADO.CODIPATRTECL%type
+,p_ESTTECL in TECLADO.ESTTECL%type
+,p_CODIEQUI in TECLADO.CODIEQUI%type
+,p_CODITECL in TECLADO.CODITECL%type
+);
+-- delete
+procedure del (
+p_CODIPATRTECL in TECLADO.CODIPATRTECL%type
+);
+end TECLADO_tapi;
+
+/
+create or replace package body TECLADO_tapi
+is
+-- insert
+procedure ins (
+p_CONETECL in TECLADO.CONETECL%type
+,p_CODIPATRTECL in TECLADO.CODIPATRTECL%type
+,p_ESTTECL in TECLADO.ESTTECL%type
+,p_CODIEQUI in TECLADO.CODIEQUI%type
+,p_CODITECL in TECLADO.CODITECL%type
+) is
+begin
+insert into TECLADO(
+CONETECL
+,CODIPATRTECL
+,ESTTECL
+,CODIEQUI
+,CODITECL
+) values (
+p_CONETECL
+,p_CODIPATRTECL
+,p_ESTTECL
+,p_CODIEQUI
+,p_CODITECL
+);end;
+-- update
+procedure upd (
+p_CONETECL in TECLADO.CONETECL%type
+,p_CODIPATRTECL in TECLADO.CODIPATRTECL%type
+,p_ESTTECL in TECLADO.ESTTECL%type
+,p_CODIEQUI in TECLADO.CODIEQUI%type
+,p_CODITECL in TECLADO.CODITECL%type
+) is
+begin
+update TECLADO set
+CONETECL = p_CONETECL
+,ESTTECL = p_ESTTECL
+,CODIEQUI = p_CODIEQUI
+,CODITECL = p_CODITECL
+where CODIPATRTECL = p_CODIPATRTECL;
+end;
+-- del
+procedure del (
+p_CODIPATRTECL in TECLADO.CODIPATRTECL%type
+) is
+begin
+delete from TECLADO
+where CODIPATRTECL = p_CODIPATRTECL;
+end;
+end TECLADO_tapi;

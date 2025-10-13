@@ -1,0 +1,25 @@
+-- Hay que mejorar la funcion
+
+CREATE OR REPLACE FUNCTION scott.FN_MAYOR_1
+(P_N1 NUMBER, P_N2 NUMBER, P_N3 NUMBER)
+RETURN NUMBER
+IS 
+P_N4 NUMBER;
+BEGIN
+  -- Proceso
+  IF P_N1 > P_N2 THEN
+      P_N4 := P_N1;
+  ELSIF P_N2 > P_N3 THEN
+      P_N4 := P_N2;
+  ELSE
+      P_N4 := P_N3;
+  END IF;
+-- Reporte
+  RETURN P_N4;
+END;
+/
+
+SELECT scott.FN_MAYOR_1(4,2,3) FROM DUAL;
+
+SELECT scott.FN_MAYOR_1(8,7,9) FROM DUAL;
+

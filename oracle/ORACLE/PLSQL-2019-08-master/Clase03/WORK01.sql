@@ -1,0 +1,31 @@
+
+CREATE OR REPLACE PROCEDURE EDUCA.SP_ALGO
+( P_COMANDO  VARCHAR2 )
+IS
+BEGIN
+  EXECUTE IMMEDIATE P_COMANDO;
+END;
+/
+
+GRANT CREATE TABLE TO EDUCA;
+
+CALL EDUCA.SP_ALGO('CREATE TABLE EDUCA.EGCC_DEMO(A VARCHAR2(100))');
+
+
+
+create or replace procedure SCOTT.DELTE_ROW
+( p_empno number ) 
+is 
+begin 
+  delete from scott.emp where empno = p_empno; 
+end;
+/
+
+rollback;
+
+SELECT * FROM SCOTT.EMP;
+
+CALL SCOTT.DELTE_ROW( 8888 );
+
+SELECT * FROM SCOTT.EMP;
+

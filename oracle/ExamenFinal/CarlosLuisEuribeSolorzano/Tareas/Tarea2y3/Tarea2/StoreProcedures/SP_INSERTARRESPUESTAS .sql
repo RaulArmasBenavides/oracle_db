@@ -1,0 +1,16 @@
+create or replace PROCEDURE SP_INSERTARRESPUESTAS (
+  iID RESPUESTA.ID%TYPE, 
+  cCODIGO RESPUESTA.CODIGO%TYPE, 
+  vOpinion RESPUESTA.OPINION%TYPE, 
+  vComentario RESPUESTA.COMENTARIO%TYPE,
+  out_resultado OUT VARCHAR2)
+IS
+  BEGIN
+    INSERT INTO RESPUESTA (ID, CODIGO, OPINION, COMENTARIO) VALUES(iID, cCodigo, vOpinion, vComentario);
+    COMMIT;
+    out_resultado := 'TRUE';
+    EXCEPTION
+      WHEN OTHERS THEN 
+      out_resultado := 'FALSE';
+      ROLLBACK;
+  END;

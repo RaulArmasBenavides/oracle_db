@@ -1,0 +1,17 @@
+Le envío la tarea 2 (la práctica la resolví en el salón de clase) :
+
+1.- Incluye el registro de las encuestas por medio del formulario Respuesta.
+2.- Se agregó validaciones usando DataAnotations en las clase entity del Producto y Respuesta
+3.- Se agregó funcionalidades en JQuery para los mensajes de confirmación al registrar, eliminar productos y al salir del sistema.
+4.- Se agregó una funcionalidad en AJAX para el registro de las respuestas del formulario de encuesta.
+
+Le envío la tarea 3 (Desde la tarea 1 ya estaba integrada con Bootstrap):
+
+1.- Se integró con Framework frontend Bootstrap los formularios de registro y edición , el menú, el listado de los productos
+2.- Se agregó Anotaciones y Alias en el Sevlet
+
+
+NOTA IMPORTANTE:
+1.- El usuario y password son los datos de la columna IDEMPLEADO y CLAVE de la tabla EMPLEADO
+2.- Hay que ejecutar los scripts para crear las 2 tablas, los store procedures y los datos precios en la USUARIO
+3.- Para registrar las respuestas hay que usar los nombres y apellidos de la tabla USUARIO

@@ -1,0 +1,2 @@
+usuario: C00005
+clave: C00005

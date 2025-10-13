@@ -1,0 +1,37 @@
+
+
+
+--busca idEmpleado
+
+
+--busca idUsuario
+
+
+--ingresa nuevo usuario
+
+
+
+
+
+
+
+--crear una vista donde muestre los usuarios y correos 
+
+create view usuario_correo
+as select usuario, correo from usuario;
+
+
+
+
+
+--create or replace function fn_generarOC(     )
+
+
+
+
+--create or replace functin fn_anularOC ( ) 
+
+
+
+
+
