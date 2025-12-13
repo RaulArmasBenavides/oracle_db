@@ -15,7 +15,7 @@
 -- =============================================
 -- CRACIÓN DEL USUARIO
 -- =============================================
-
+ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
 DECLARE
 	N INT;
 	COMMAND VARCHAR2(200);
