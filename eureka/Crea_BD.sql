@@ -15,7 +15,20 @@ Blog           :  http://gcoronelc.blogspot.com
 -- =============================================
 
 -- Valido para la versión 12 o mas
-ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
+DECLARE
+    V_CONTENEDOR VARCHAR2(128);
+BEGIN
+    V_CONTENEDOR := SYS_CONTEXT('USERENV', 'CON_NAME');
+
+    IF UPPER(V_CONTENEDOR) <> 'PDBORCL' THEN
+        RAISE_APPLICATION_ERROR(
+            -20001,
+            'Contenedor incorrecto: ' || V_CONTENEDOR ||
+            '. Conectarse al servicio PDBORCL antes de ejecutar el script.'
+        );
+    END IF;
+END;
+/
 
 DECLARE
 	N INT;
